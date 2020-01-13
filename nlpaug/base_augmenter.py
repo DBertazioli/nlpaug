@@ -1,6 +1,7 @@
 import random
 import numpy as np
-from multiprocessing.dummy import Pool as ThreadPool
+#from multiprocessing.dummy import Pool as ThreadPool
+from multiprocessing import Pool as ThreadPool
 
 from nlpaug.util import Action, Method, WarningException, WarningName, WarningCode, WarningMessage
 
@@ -123,8 +124,8 @@ class Augmenter:
                     augmented_results.extend(augmented_result)
         else:
             batch_data = [data[i:i+num_thread] for i in range(0, len(data), num_thread)]
-            for i in range(n):
-                for mini_batch_data in tqdm(batch_data):
+            for i in tqdm(range(n)):
+                for mini_batch_data in batch_data:
                     augmented_results.extend(self._parallel_augments(self.augment, mini_batch_data))
 
         return augmented_results
@@ -147,7 +148,8 @@ class Augmenter:
 
     @classmethod
     def _parallel_augments(cls, action_fx, data):
-        pool = ThreadPool(len(data))
+        #pool = ThreadPool(len(data))
+        pool = Pool(40)
         results = pool.map(action_fx, data)
         pool.close()
         pool.join()
