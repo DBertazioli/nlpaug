@@ -149,7 +149,7 @@ class Augmenter:
     @classmethod
     def _parallel_augments(cls, action_fx, data):
         #pool = ThreadPool(len(data))
-        pool = Pool(40)
+        pool = ThreadPool(40)
         results = pool.map(action_fx, data)
         pool.close()
         pool.join()
