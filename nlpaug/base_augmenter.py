@@ -4,6 +4,7 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 from nlpaug.util import Action, Method, WarningException, WarningName, WarningCode, WarningMessage
 
+from tqdm import tqdm
 
 class Augmenter:
     def __init__(self, name, method, action, aug_min, aug_max, aug_p=0.1, device='cpu', verbose=0):
@@ -123,7 +124,7 @@ class Augmenter:
         else:
             batch_data = [data[i:i+num_thread] for i in range(0, len(data), num_thread)]
             for i in range(n):
-                for mini_batch_data in batch_data:
+                for mini_batch_data in tqdm(batch_data):
                     augmented_results.extend(self._parallel_augments(self.augment, mini_batch_data))
 
         return augmented_results
